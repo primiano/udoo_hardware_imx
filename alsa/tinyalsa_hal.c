@@ -92,13 +92,15 @@
 #define PRODUCT_NAME_PROPERTY   "ro.product.name"
 #define PRODUCT_DEVICE_IMX      "imx"
 #define PRODUCT_DEVICE_AUTO     "udoo"
-#define SUPPORT_CARD_NUM        3
+#define SUPPORT_CARD_NUM        4
 #define VT1613_AUDIO_CARD_IDX	0
-#define HDMI_AUDIO_CARD_IDX	1
+#define SPDIF_AUDIO_CARD_IDX    1
+#define HDMI_AUDIO_CARD_IDX     2
 
 /*"null_card" must be in the end of this array*/
 struct audio_card *audio_card_list[SUPPORT_CARD_NUM] = {
     &vt1613_card,
+    &spdif_card,
     &hdmi_card,
     &null_card,
 };
@@ -3122,6 +3124,11 @@ static int adev_open(const hw_module_t* module, const char* name,
     {
 	out_dev_idx = VT1613_AUDIO_CARD_IDX;
 	ALOGD("set onboard audio device");
+    }
+    else if(!strcmp(audio_device, "imx-spdif"))
+    {
+        out_dev_idx = SPDIF_AUDIO_CARD_IDX;
+        ALOGD("set S/PDIF audio device");
     }
     
     adev = calloc(1, sizeof(struct imx_audio_device));
